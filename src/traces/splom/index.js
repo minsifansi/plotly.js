@@ -9,7 +9,6 @@
 'use strict';
 
 var createMatrix = require('regl-splom');
-var arrayRange = require('array-range');
 
 var Registry = require('../../registry');
 var Grid = require('../../components/grid');
@@ -127,8 +126,8 @@ function sceneUpdate(gd, trace) {
     var reset = {dirty: true};
 
     var first = {
-        selectBatch: null,
-        unselectBatch: null,
+        selectBatch: [],
+        unselectBatch: [],
         matrix: false,
         select: null
     };
@@ -139,8 +138,10 @@ function sceneUpdate(gd, trace) {
         scene = splomScenes[uid] = Lib.extendFlat({}, reset, first);
 
         scene.draw = function draw() {
+            console.log('FIX!!')
+
             if(scene.matrix && scene.matrix.draw) {
-                if(scene.selectBatch) {
+                if(scene.selectBatch.length || scene.unselectBatch.length) {
                     scene.matrix.draw(scene.unselectBatch, scene.selectBatch);
                 } else {
                     scene.matrix.draw();
@@ -237,16 +238,9 @@ function plotOne(gd, cd0) {
     var clickSelectEnabled = fullLayout.clickmode.indexOf('select') > -1;
     var selectMode = dragmode === 'lasso' || dragmode === 'select' ||
       !!trace.selectedpoints || clickSelectEnabled;
-    scene.selectBatch = null;
-    scene.unselectBatch = null;
 
     if(selectMode) {
         var commonLength = trace._length;
-
-        if(!scene.selectBatch) {
-            scene.selectBatch = [];
-            scene.unselectBatch = [];
-        }
 
         // regenerate scene batch, if traces number changed during selection
         if(trace.selectedpoints) {
@@ -288,7 +282,7 @@ function plotOne(gd, cd0) {
             }
         }
 
-        if(scene.selectBatch) {
+        if(scene.selectBatch.length || scene.unselectBatch.length) {
             scene.matrix.update(matrixOpts, matrixOpts);
             scene.matrix.update(scene.unselectedOptions, scene.selectedOptions);
             scene.matrix.update(viewOpts, viewOpts);
@@ -374,7 +368,6 @@ function selectPoints(searchInfo, selectionTester) {
     var xa = searchInfo.xaxis;
     var ya = searchInfo.yaxis;
     var selection = [];
-    var i;
 
     if(!scene) return selection;
 
@@ -389,14 +382,13 @@ function selectPoints(searchInfo, selectionTester) {
     var ypx = stash.ypx[yi];
     var x = cdata[xi];
     var y = cdata[yi];
+    var els = [];
+    var unels = [];
 
     // degenerate polygon does not enable selection
     // filter out points by visible scatter ones
-    var els = null;
-    var unels = null;
     if(selectionTester !== false && !selectionTester.degenerate) {
-        els = [], unels = [];
-        for(i = 0; i < x.length; i++) {
+        for(var i = 0; i < x.length; i++) {
             if(selectionTester.contains([xpx[i], ypx[i]], null, i, searchInfo)) {
                 els.push(i);
                 selection.push({
@@ -408,29 +400,18 @@ function selectPoints(searchInfo, selectionTester) {
                 unels.push(i);
             }
         }
-    } else {
-        unels = arrayRange(stash.count);
     }
 
-    // make sure selectBatch is created
-    if(!scene.selectBatch) {
-        scene.selectBatch = [];
-        scene.unselectBatch = [];
-    }
-
-    if(!scene.selectBatch) {
-        // enter every trace select mode
-        for(i = 0; i < scene.count; i++) {
-            scene.selectBatch = [];
-            scene.unselectBatch = [];
-        }
-        // we should turn scatter2d into unselected once we have any points selected
+    if(!scene.selectBatch.length) {
+        // set unselected styles on 'context' canvas (if not done already)
         scene.matrix.update(scene.unselectedOptions, scene.selectedOptions);
+    } else if(!els.length && !unels.length) {
+        // reset to base styles when clearing
+        scene.matrix.update(scene.matrixOpts, null);
     }
 
     scene.selectBatch = els;
     scene.unselectBatch = unels;
-
 
     return selection;
 }
