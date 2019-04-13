@@ -503,6 +503,8 @@ function calcTextinfo(calcTrace, index, fullLayout) {
     var allParts = textinfo.split('+');
     var allTexts = [];
 
+    var hadValue = false;
+    var hadPercent = false;
     var hadDelta = false;
     var hadFinal = false;
     var hadInitial = false;
@@ -524,21 +526,32 @@ function calcTextinfo(calcTrace, index, fullLayout) {
                 allTexts.push(trace.x[index]);
             }
         } else {
-            // waterfall options
+            if(trace.type === 'waterfall') {
+                var delta = +cdi.rawS || cdi.s;
+                var final = cdi.v;
+                var initial = final - delta;
 
-            var delta = +cdi.rawS || cdi.s;
-            var final = cdi.v;
-            var initial = final - delta;
+                if(!hadDelta && part === 'delta') {
+                    hadDelta = true;
+                    allTexts.push(pieHelpers.formatPieValue(delta, separators));
+                } else if(!hadFinal && part === 'final') {
+                    hadFinal = true;
+                    allTexts.push(pieHelpers.formatPieValue(final, separators));
+                } else if(!hadInitial && part === 'initial') {
+                    hadInitial = true;
+                    allTexts.push(pieHelpers.formatPieValue(initial, separators));
+                }
+            } else if(trace.type === 'funnel') {
+                var value = cdi.s;
+                var percent = cdi.ratio;
 
-            if(!hadDelta && part === 'delta') {
-                hadDelta = true;
-                allTexts.push(pieHelpers.formatPieValue(delta, separators));
-            } else if(!hadFinal && part === 'final') {
-                hadFinal = true;
-                allTexts.push(pieHelpers.formatPieValue(final, separators));
-            } else if(!hadInitial && part === 'initial') {
-                hadInitial = true;
-                allTexts.push(pieHelpers.formatPieValue(initial, separators));
+                if(!hadValue && part === 'value') {
+                    hadValue = true;
+                    allTexts.push(pieHelpers.formatPieValue(value, separators));
+                } else if(!hadPercent && part === 'percent') {
+                    hadPercent = true;
+                    allTexts.push(pieHelpers.formatPiePercent(percent, separators));
+                }
             }
         }
     }
