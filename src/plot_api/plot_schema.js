@@ -561,7 +561,6 @@ function getLayoutAttributes() {
                 }
             }
         } else if(_module.name === 'colorscale') {
-            // TODO
             extendDeepAll(layoutAttributes, _module.layoutAttributes);
         } else if(_module.layoutAttributes) {
             // older style without schema need to be explicitly merged in now

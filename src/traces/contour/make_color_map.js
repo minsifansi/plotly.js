@@ -6,10 +6,10 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-
 'use strict';
 
 var d3 = require('d3');
+
 var Colorscale = require('../../components/colorscale');
 var endPlus = require('./end_plus');
 
@@ -20,16 +20,16 @@ module.exports = function makeColorMap(trace) {
     var cs = contours.size || 1;
     var nc = Math.floor((end - start) / cs) + 1;
     var extra = contours.coloring === 'lines' ? 0 : 1;
-    var cont = trace._colorAx || trace;
+    var cOpts = Colorscale.extractOpts(trace);
 
     if(!isFinite(cs)) {
         cs = 1;
         nc = 1;
     }
 
-    var scl = cont.reversescale ?
-        Colorscale.flipScale(cont.colorscale) :
-        cont.colorscale;
+    var scl = trace.reversescale ?
+        Colorscale.flipScale(trace.colorscale) :
+        trace.colorscale;
 
     var len = scl.length;
     var domain = new Array(len);
@@ -38,14 +38,17 @@ module.exports = function makeColorMap(trace) {
     var si, i;
 
     if(contours.coloring === 'heatmap') {
-        var cLetter = trace._colorAx ? 'c' : 'z';
-        var zauto = cont[cLetter + 'auto'];
-        var zmin0 = cont[cLetter + 'min'];
-        var zmax0 = cont[cLetter + 'max'];
+        var zmin0 = cOpts.min;
+        var zmax0 = cOpts.max;
 
-        if(zauto && trace.autocontour === false) {
+        // TODO can we move this elsewhere??
+        if(cOpts.auto && trace.autocontour === false) {
             zmin0 = start - cs / 2;
             zmax0 = zmin0 + nc * cs;
+
+            // TODO - is this ok?
+            cOpts._sync('min', zmin0);
+            cOpts._sync('max', zmax0);
         }
 
         for(i = 0; i < len; i++) {
@@ -67,17 +70,13 @@ module.exports = function makeColorMap(trace) {
 
         if(zmin !== zmin0) {
             domain.splice(0, 0, zmin);
-            range.splice(0, 0, Range[0]);
+            range.splice(0, 0, range[0]);
         }
 
         if(zmax !== zmax0) {
             domain.push(zmax);
             range.push(range[range.length - 1]);
         }
-
-        // TODO do we need to mutate those back in??
-        cont[cLetter + 'min'] = zmin0;
-        cont[cLetter + 'max'] = zmax0;
     } else {
         for(i = 0; i < len; i++) {
             si = scl[i];

@@ -60,13 +60,13 @@ module.exports = function colorScaleDefaults(outerContIn, outerContOut, layout, 
                     ].join(' '));
                 }
             } else {
-                // stash colorbar options to help Colorbar.draw
+                // stash colorbar options to help in Colorbar.draw
                 colorAxes[colorAx] = [colorbarVisuals, outerContOut];
                 return;
             }
         }
 
-        // otherwise clear coloraxis and go on the coerce colorscale attrs
+        // otherwise clear coloraxis and go on to coerce colorscale attrs
         Lib.nestedProperty(outerContOut, prefix + 'coloraxis').set(null);
     }
 

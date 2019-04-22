@@ -256,7 +256,5 @@ module.exports = function colorScaleAttrs(context, opts) {
         };
     }
 
-    // TODO merge in colorbar attrs here???
-
     return attrs;
 };

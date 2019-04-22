@@ -26,6 +26,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
         // TODO won't work for coloraxis2, coloraxis3
         //  probably need to revamp colorscaleDefaults so that
         //  we pass 'inner' containers instead of 'outer'
+        //  ....
         colorscaleDefaults(layoutIn, layoutOut, layoutOut, coerce, {
             prefix: k + '.',
             cLetter: 'c'

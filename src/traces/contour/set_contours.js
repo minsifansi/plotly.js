@@ -10,21 +10,16 @@
 
 var Axes = require('../../plots/cartesian/axes');
 var Lib = require('../../lib');
+var extractOpts = require('../../components/colorscale').extractOpts;
 
 module.exports = function setContours(trace) {
     var contours = trace.contours;
 
     // check if we need to auto-choose contour levels
     if(trace.autocontour) {
-        var zmin, zmax;
-
-        if(trace._colorAx) {
-            zmin = trace._colorAx.cmin;
-            zmax = trace._colorAx.cmax;
-        } else {
-            zmin = trace.zmin;
-            zmax = trace.zmax;
-        }
+        var cOpts = extractOpts(trace);
+        var zmin = cOpts.min;
+        var zmax = cOpts.max;
 
         if(zmin === undefined || zmax === undefined) {
             zmin = Lib.aggNums(Math.min, null, trace._z);
