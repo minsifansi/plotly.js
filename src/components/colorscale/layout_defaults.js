@@ -9,17 +9,27 @@
 'use strict';
 
 var Lib = require('../../lib');
+
 var colorscaleAttrs = require('./layout_attributes');
-var Template = require('../../plot_api/plot_template');
+var colorscaleDefaults = require('./defaults');
 
 module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
-    var colorscaleIn = layoutIn.colorscale;
-    var colorscaleOut = Template.newContainer(layoutOut, 'colorscale');
     function coerce(attr, dflt) {
-        return Lib.coerce(colorscaleIn, colorscaleOut, colorscaleAttrs, attr, dflt);
+        return Lib.coerce(layoutIn, layoutOut, colorscaleAttrs, attr, dflt);
     }
 
-    coerce('sequential');
-    coerce('sequentialminus');
-    coerce('diverging');
+    coerce('colorscale.sequential');
+    coerce('colorscale.sequentialminus');
+    coerce('colorscale.diverging');
+
+    for(var k in layoutOut._colorAxes) {
+        // TODO won't work for coloraxis2, coloraxis3
+        //  probably need to revamp colorscaleDefaults so that
+        //  we pass 'inner' containers instead of 'outer'
+        colorscaleDefaults(layoutIn, layoutOut, layoutOut, coerce, {
+            prefix: k + '.',
+            cLetter: 'c'
+        });
+        layoutOut[k]._name = k;
+    }
 };

@@ -6,20 +6,26 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-
 'use strict';
 
 var Axes = require('../../plots/cartesian/axes');
 var Lib = require('../../lib');
-
 
 module.exports = function setContours(trace) {
     var contours = trace.contours;
 
     // check if we need to auto-choose contour levels
     if(trace.autocontour) {
-        var zmin = trace.zmin;
-        var zmax = trace.zmax;
+        var zmin, zmax;
+
+        if(trace._colorAx) {
+            zmin = trace._colorAx.cmin;
+            zmax = trace._colorAx.cmax;
+        } else {
+            zmin = trace.zmin;
+            zmax = trace.zmax;
+        }
+
         if(zmin === undefined || zmax === undefined) {
             zmin = Lib.aggNums(Math.min, null, trace._z);
             zmax = Lib.aggNums(Math.max, null, trace._z);

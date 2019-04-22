@@ -11,17 +11,19 @@
 var makeColorMap = require('./make_color_map');
 var endPlus = require('./end_plus');
 
-function calc(gd, cd, opts) {
-    var trace = cd[0].trace;
+function calc(gd, trace, opts) {
     var contours = trace.contours;
     var line = trace.line;
     var cs = contours.size || 1;
     var coloring = contours.coloring;
     var colorMap = makeColorMap(trace, {isColorbar: true});
+    var cont = trace._colorAx || trace;
+    var cLetter = trace._colorAx ? 'c' : 'z';
+
 
     if(coloring === 'heatmap') {
         opts._fillgradient = trace.colorscale;
-        opts._zrange = [trace.zmin, trace.zmax];
+        opts._zrange = [cont[cLetter + 'min'], cont[cLetter + 'max']];
     } else if(coloring === 'fill') {
         opts._fillcolor = colorMap;
     }

@@ -638,10 +638,9 @@ drawing.tryColorscale = function(marker, prefix) {
     var cont = prefix ? Lib.nestedProperty(marker, prefix).get() : marker;
 
     if(cont) {
-        var scl = cont.colorscale;
         var colorArray = cont.color;
 
-        if(scl && Lib.isArrayOrTypedArray(colorArray)) {
+        if(cont.colorscale && Lib.isArrayOrTypedArray(colorArray)) {
             return Colorscale.makeColorScaleFunc(
                 Colorscale.extractScale(cont, {cLetter: 'c'})
             );

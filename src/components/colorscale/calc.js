@@ -8,34 +8,43 @@
 
 'use strict';
 
+var isNumeric = require('fast-isnumeric');
+
 var Lib = require('../../lib');
+var extractOpts = require('./helpers').extractOpts;
 
 module.exports = function calc(gd, trace, opts) {
     var fullLayout = gd._fullLayout;
     var vals = opts.vals;
     var containerStr = opts.containerStr;
-    var cLetter = opts.cLetter;
 
     var container = containerStr ?
         Lib.nestedProperty(trace, containerStr).get() :
         trace;
 
-    var autoAttr = cLetter + 'auto';
-    var minAttr = cLetter + 'min';
-    var maxAttr = cLetter + 'max';
-    var midAttr = cLetter + 'mid';
-    var auto = container[autoAttr];
-    var min = container[minAttr];
-    var max = container[maxAttr];
-    var mid = container[midAttr];
-    var scl = container.colorscale;
+    var cOpts = extractOpts(container);
+    var auto = cOpts.auto;
+    var min = cOpts.min;
+    var max = cOpts.max;
+    var mid = cOpts.mid;
 
-    if(auto !== false || min === undefined) {
-        min = Lib.aggNums(Math.min, null, vals);
+    var minVal = function() { return Lib.aggNums(Math.min, null, vals); };
+    var maxVal = function() { return Lib.aggNums(Math.max, null, vals); };
+
+    if(auto !== false) {
+        if(min === undefined) {
+            min = minVal();
+        } else if(container._colorAx && isNumeric(min)) {
+            min = Math.min(min, minVal());
+        }
     }
 
-    if(auto !== false || max === undefined) {
-        max = Lib.aggNums(Math.max, null, vals);
+    if(auto !== false) {
+        if(max === undefined) {
+            max = maxVal();
+        } else if(container._colorAx && isNumeric(max)) {
+            max = Math.max(max, maxVal());
+        }
     }
 
     if(auto !== false && mid !== undefined) {
@@ -51,14 +60,14 @@ module.exports = function calc(gd, trace, opts) {
         max += 0.5;
     }
 
-    container['_' + minAttr] = container[minAttr] = min;
-    container['_' + maxAttr] = container[maxAttr] = max;
+    cOpts._sync('min', min);
+    cOpts._sync('max', max);
 
     if(container.autocolorscale) {
+        var scl;
         if(min * max < 0) scl = fullLayout.colorscale.diverging;
         else if(min >= 0) scl = fullLayout.colorscale.sequential;
         else scl = fullLayout.colorscale.sequentialminus;
-
-        container._colorscale = container.colorscale = scl;
+        cOpts._sync('colorscale', scl);
     }
 };

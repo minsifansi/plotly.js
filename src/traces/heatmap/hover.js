@@ -24,7 +24,6 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode, hoverLay
     var xc = cd0.xCenter;
     var yc = cd0.yCenter;
     var zmask = cd0.zmask;
-    var range = [trace.zmin, trace.zmax];
     var zhoverformat = trace.zhoverformat;
     var x2 = x;
     var y2 = y;
@@ -95,17 +94,17 @@ module.exports = function hoverPoints(pointData, xval, yval, hovermode, hoverLay
         text = cd0.text[ny][nx];
     }
 
-    var zLabel;
     // dummy axis for formatting the z value
     var dummyAx = {
         type: 'linear',
-        range: range,
+        range: trace._colorAx ?
+            [trace._colorAx.cmin, trace._colorAx.cmax] :
+            [trace.zmin, trace.zmax],
         hoverformat: zhoverformat,
         _separators: xa._separators,
         _numFormat: xa._numFormat
     };
-    var zLabelObj = Axes.tickText(dummyAx, zVal, 'hover');
-    zLabel = zLabelObj.text;
+    var zLabel = Axes.tickText(dummyAx, zVal, 'hover').text;
 
     return [Lib.extendFlat(pointData, {
         index: [ny, nx],

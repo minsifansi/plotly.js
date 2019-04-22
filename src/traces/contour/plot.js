@@ -44,6 +44,7 @@ exports.plot = function plot(gd, plotinfo, cdcontours, contourLayer) {
         var cdheatmaps = [];
         if(contours.coloring === 'heatmap') {
             if(trace.zauto && (trace.autocontour === false)) {
+                // TODO !!
                 trace._input.zmin = trace.zmin =
                     contours.start - contours.size / 2;
                 trace._input.zmax = trace.zmax =

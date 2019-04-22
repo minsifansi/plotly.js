@@ -10,6 +10,7 @@
 
 var palettes = require('./scales.js').scales;
 var paletteStr = Object.keys(palettes);
+var counterRegex = require('../../lib/regex').counter;
 
 function code(s) {
     return '`' + s + '`';
@@ -241,6 +242,21 @@ module.exports = function colorScaleAttrs(context, opts) {
             ].join('')
         };
     }
+
+    if(!opts.noColorAxis) {
+        attrs.coloraxis = {
+            valType: 'subplotid',
+            role: 'info',
+            regex: counterRegex('coloraxis'),
+            dflt: '',
+            editType: 'calc',
+            description: [
+                '..'
+            ].join(' ')
+        };
+    }
+
+    // TODO merge in colorbar attrs here???
 
     return attrs;
 };
