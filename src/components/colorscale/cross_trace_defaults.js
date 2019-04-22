@@ -31,13 +31,13 @@ module.exports = function crossTraceDefaults(fullData, fullLayout) {
                 cont._colorAx = fullLayout[cont.coloraxis];
             } else {
                 var cOpts = extractOpts(cont);
-                var isAuto = cOpts.isAuto;
+                var isAuto = cOpts.auto;
 
                 if(isAuto || cOpts.min === undefined) {
-                    replace(cont, cbOpt.minAttr);
+                    replace(cont, cbOpt.min);
                 }
                 if(isAuto || cOpts.max === undefined) {
-                    replace(cont, cbOpt.maxAttr);
+                    replace(cont, cbOpt.max);
                 }
                 if(cOpts.autocolorscale) {
                     replace(cont, 'colorscale');

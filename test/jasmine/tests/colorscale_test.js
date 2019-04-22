@@ -259,7 +259,7 @@ describe('Test colorscale:', function() {
         }
 
         beforeEach(function() {
-            traceOut = {};
+            traceOut = {_module: {}};
         });
 
         it('should set auto to true when min/max are valid', function() {
@@ -330,7 +330,10 @@ describe('Test colorscale:', function() {
         }
 
         beforeEach(function() {
-            traceOut = { marker: {} };
+            traceOut = {
+                marker: {},
+                _module: {}
+            };
         });
 
         it('should coerce autocolorscale to true by default', function() {
@@ -535,11 +538,11 @@ describe('Test colorscale:', function() {
         it('should constrain color array values between cmin and cmax', function() {
             var trace = {
                 colorscale: scale,
-                pmin: 2,
-                pmax: 3
+                cmin: 2,
+                cmax: 3
             };
 
-            var specs = Colorscale.extractScale(trace, {cLetter: 'p'});
+            var specs = Colorscale.extractScale(trace);
             var sclFunc = Colorscale.makeColorScaleFunc(specs);
 
             var color1 = sclFunc(1);
@@ -557,11 +560,11 @@ describe('Test colorscale:', function() {
             var trace = {
                 colorscale: scale,
                 reversescale: true,
-                pmin: 2,
-                pmax: 3
+                zmin: 2,
+                zmax: 3
             };
 
-            var specs = Colorscale.extractScale(trace, {cLetter: 'p'});
+            var specs = Colorscale.extractScale(trace);
             var sclFunc = Colorscale.makeColorScaleFunc(specs);
 
             var color1 = sclFunc(1);

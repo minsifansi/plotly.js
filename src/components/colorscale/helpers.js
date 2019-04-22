@@ -44,7 +44,7 @@ function hasColorscale(trace, containerStr) {
     );
 }
 
-var constantAttrs = ['showscale', 'autocolorcale', 'colorscale', 'reversescale', 'colorbar'];
+var constantAttrs = ['showscale', 'autocolorscale', 'colorscale', 'reversescale', 'colorbar'];
 var letterAttrs = ['min', 'max', 'mid', 'auto'];
 
 /**
@@ -58,10 +58,10 @@ var letterAttrs = ['min', 'max', 'mid', 'auto'];
  *  - max: cmax or zmax
  *  - mid: cmid or zmid
  *  - auto: cauto or zauto
- *  - scl: colorscale (flipped if reversescale:true)
+ *  - *scale: *scale attrs
  *  - colorbar: colorbar
- *  - cont: ref to option container (i.e. the coloraxis if set, =cont otherwise)
- *  - sync: function syncing attr and underscore dual (useful when calc'ing min/max)
+ *  - _cont: ref to option container (i.e. the coloraxis if set, =cont otherwise)
+ *  - _sync: function syncing attr and underscore dual (useful when calc'ing min/max)
  */
 function extractOpts(cont) {
     var colorAx = cont._colorAx;
