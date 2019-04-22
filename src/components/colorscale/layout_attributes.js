@@ -20,6 +20,8 @@ module.exports = {
     editType: 'calc',
 
     colorscale: {
+        editType: 'calc',
+
         sequential: {
             valType: 'colorscale',
             dflt: scales.Reds,
@@ -62,6 +64,7 @@ module.exports = {
             ''
         ].join(' ')
     }, colorscaleAttrs('', {
+        colorAttr: 'corresponding trace color array(s)',
         noColorAxis: true,
         showScaleDflt: true
     }), {
