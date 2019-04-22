@@ -23,7 +23,7 @@ module.exports = function calc(gd, trace, opts) {
         trace;
 
     var cOpts = extractOpts(container);
-    var auto = cOpts.auto;
+    var auto = cOpts.auto !== false;
     var min = cOpts.min;
     var max = cOpts.max;
     var mid = cOpts.mid;
@@ -31,23 +31,19 @@ module.exports = function calc(gd, trace, opts) {
     var minVal = function() { return Lib.aggNums(Math.min, null, vals); };
     var maxVal = function() { return Lib.aggNums(Math.max, null, vals); };
 
-    if(auto !== false) {
-        if(min === undefined) {
-            min = minVal();
-        } else if(container._colorAx && isNumeric(min)) {
-            min = Math.min(min, minVal());
-        }
+    if(auto || min === undefined) {
+        min = minVal();
+    } else if(auto && container._colorAx && isNumeric(min)) {
+        min = Math.min(min, minVal());
     }
 
-    if(auto !== false) {
-        if(max === undefined) {
-            max = maxVal();
-        } else if(container._colorAx && isNumeric(max)) {
-            max = Math.max(max, maxVal());
-        }
+    if(auto || max === undefined) {
+        max = maxVal();
+    } else if(auto && container._colorAx && isNumeric(max)) {
+        max = Math.max(max, maxVal());
     }
 
-    if(auto !== false && mid !== undefined) {
+    if(auto && mid !== undefined) {
         if(max - mid > mid - min) {
             min = mid - (max - mid);
         } else if(max - mid < mid - min) {
