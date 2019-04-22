@@ -97,6 +97,7 @@ module.exports = overrideAll({
         autocolorscale: markerAttrs.autocolorscale,
         reversescale: markerAttrs.reversescale,
         showscale: markerAttrs.showscale,
+        coloraxis: markerAttrs.coloraxis,
         colorbar: colorbarAttrs,
 
         // line
