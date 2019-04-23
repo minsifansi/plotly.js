@@ -214,7 +214,6 @@ function makeColorScaleFunc(specs, opts) {
     return sclFunc;
 }
 
-// TODO !!
 function makeColorScaleFuncFromTrace(trace, opts) {
     return makeColorScaleFunc(extractScale(trace), opts);
 }
@@ -233,7 +232,7 @@ function colorArray2rbga(colorArray) {
 module.exports = {
     hasColorscale: hasColorscale,
     extractOpts: extractOpts,
-    extractScale: extractScale, // TODO might not need to export that one afterall
+    extractScale: extractScale,
     flipScale: flipScale,
     makeColorScaleFunc: makeColorScaleFunc,
     makeColorScaleFuncFromTrace: makeColorScaleFuncFromTrace

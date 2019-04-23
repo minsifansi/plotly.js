@@ -639,11 +639,8 @@ drawing.tryColorscale = function(marker, prefix) {
 
     if(cont) {
         var colorArray = cont.color;
-
         if((cont.colorscale || cont._colorAx) && Lib.isArrayOrTypedArray(colorArray)) {
-            return Colorscale.makeColorScaleFunc(
-                Colorscale.extractScale(cont, {cLetter: 'c'})
-            );
+            return Colorscale.makeColorScaleFuncFromTrace(cont);
         }
     }
     return Lib.identity;
