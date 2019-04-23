@@ -22,15 +22,20 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
     coerce('colorscale.sequentialminus');
     coerce('colorscale.diverging');
 
+    var colorAxIn, colorAxOut;
+
+    function coerceAx(attr, dflt) {
+        return Lib.coerce(colorAxIn, colorAxOut, colorscaleAttrs.coloraxis, attr, dflt);
+    }
+
     for(var k in layoutOut._colorAxes) {
-        // TODO won't work for coloraxis2, coloraxis3
-        //  probably need to revamp colorscaleDefaults so that
-        //  we pass 'inner' containers instead of 'outer'
-        //  ....
-        colorscaleDefaults(layoutIn, layoutOut, layoutOut, coerce, {
-            prefix: k + '.',
-            cLetter: 'c'
-        });
-        layoutOut[k]._name = k;
+        colorAxIn = layoutIn[k] || {};
+
+        // TODO templates ???
+        colorAxOut = layoutOut[k];
+        if(!colorAxOut) colorAxOut = layoutOut[k] = {};
+        colorAxOut._name = k;
+
+        colorscaleDefaults(colorAxIn, colorAxOut, layoutOut, coerceAx, {prefix: '', cLetter: 'c'});
     }
 };

@@ -31,16 +31,24 @@ module.exports = function calc(gd, trace, opts) {
     var minVal = function() { return Lib.aggNums(Math.min, null, vals); };
     var maxVal = function() { return Lib.aggNums(Math.max, null, vals); };
 
-    if(auto || min === undefined) {
+    if(min === undefined) {
         min = minVal();
-    } else if(auto && container._colorAx && isNumeric(min)) {
-        min = Math.min(min, minVal());
+    } else if(auto) {
+        if(container._colorAx && isNumeric(min)) {
+            min = Math.min(min, minVal());
+        } else {
+            min = minVal();
+        }
     }
 
-    if(auto || max === undefined) {
+    if(max === undefined) {
         max = maxVal();
-    } else if(auto && container._colorAx && isNumeric(max)) {
-        max = Math.max(max, maxVal());
+    } else if(auto) {
+        if(container._colorAx && isNumeric(max)) {
+            max = Math.max(max, maxVal());
+        } else {
+            max = maxVal();
+        }
     }
 
     if(auto && mid !== undefined) {
@@ -59,7 +67,7 @@ module.exports = function calc(gd, trace, opts) {
     cOpts._sync('min', min);
     cOpts._sync('max', max);
 
-    if(container.autocolorscale) {
+    if(cOpts.autocolorscale) {
         var scl;
         if(min * max < 0) scl = fullLayout.colorscale.diverging;
         else if(min >= 0) scl = fullLayout.colorscale.sequential;

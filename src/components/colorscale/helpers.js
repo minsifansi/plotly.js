@@ -60,7 +60,7 @@ var letterAttrs = ['min', 'max', 'mid', 'auto'];
  *  - auto: cauto or zauto
  *  - *scale: *scale attrs
  *  - colorbar: colorbar
- *  - _cont: ref to option container (i.e. the coloraxis if set, =cont otherwise)
+ *
  *  - _sync: function syncing attr and underscore dual (useful when calc'ing min/max)
  */
 function extractOpts(cont) {
@@ -102,8 +102,6 @@ function extractOpts(cont) {
         var k2 = letterAttrs.indexOf(k) !== -1 ? cLetter + k : k;
         cont2[k2] = cont2['_' + k2] = v;
     };
-
-    out._cont = cont2;
 
     return out;
 }
