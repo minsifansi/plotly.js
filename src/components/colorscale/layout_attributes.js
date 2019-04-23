@@ -10,8 +10,7 @@
 
 var extendFlat = require('../../lib/extend').extendFlat;
 
-var colorscaleAttrs = require('./attributes');
-var colorbarAttrs = require('../colorbar/attributes');
+var colorScaleAttrs = require('./attributes');
 var scales = require('./scales').scales;
 
 var msg = 'Note that `autocolorscale` must be true for this attribute to work.';
@@ -63,11 +62,9 @@ module.exports = {
         description: [
             ''
         ].join(' ')
-    }, colorscaleAttrs('', {
+    }, colorScaleAttrs('', {
         colorAttr: 'corresponding trace color array(s)',
         noColorAxis: true,
         showScaleDflt: true
-    }), {
-        colorbar: colorbarAttrs
-    })
+    }))
 };

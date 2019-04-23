@@ -8,9 +8,11 @@
 
 'use strict';
 
+var colorbarAttrs = require('../colorbar/attributes');
+var counterRegex = require('../../lib/regex').counter;
+
 var palettes = require('./scales.js').scales;
 var paletteStr = Object.keys(palettes);
-var counterRegex = require('../../lib/regex').counter;
 
 function code(s) {
     return '`' + s + '`';
@@ -241,6 +243,8 @@ module.exports = function colorScaleAttrs(context, opts) {
                 effectDesc
             ].join('')
         };
+
+        attrs.colorbar = colorbarAttrs;
     }
 
     if(!opts.noColorAxis) {

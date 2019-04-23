@@ -10,12 +10,12 @@
 
 var Lib = require('../../lib');
 
-var colorscaleAttrs = require('./layout_attributes');
-var colorscaleDefaults = require('./defaults');
+var colorScaleAttrs = require('./layout_attributes');
+var colorScaleDefaults = require('./defaults');
 
 module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
     function coerce(attr, dflt) {
-        return Lib.coerce(layoutIn, layoutOut, colorscaleAttrs, attr, dflt);
+        return Lib.coerce(layoutIn, layoutOut, colorScaleAttrs, attr, dflt);
     }
 
     coerce('colorscale.sequential');
@@ -25,7 +25,7 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
     var colorAxIn, colorAxOut;
 
     function coerceAx(attr, dflt) {
-        return Lib.coerce(colorAxIn, colorAxOut, colorscaleAttrs.coloraxis, attr, dflt);
+        return Lib.coerce(colorAxIn, colorAxOut, colorScaleAttrs.coloraxis, attr, dflt);
     }
 
     for(var k in layoutOut._colorAxes) {
@@ -36,6 +36,6 @@ module.exports = function supplyLayoutDefaults(layoutIn, layoutOut) {
         if(!colorAxOut) colorAxOut = layoutOut[k] = {};
         colorAxOut._name = k;
 
-        colorscaleDefaults(colorAxIn, colorAxOut, layoutOut, coerceAx, {prefix: '', cLetter: 'c'});
+        colorScaleDefaults(colorAxIn, colorAxOut, layoutOut, coerceAx, {prefix: '', cLetter: 'c'});
     }
 };
